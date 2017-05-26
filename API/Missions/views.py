@@ -39,7 +39,7 @@ def info(request, name):
         date["jour"] = doc.activeDate.day
         date["année"] = doc.activeDate.year
         returnedDic["document"][doc.type]["date_signature"] = date
-    returnedDic["infos_etude"] = {"contrat" : {"valide" : "no"}, "devis" : {"valide" : "no"}, "contrat" : {"cahier_charges" : "no"}}
+    returnedDic["infos_etude"] = {"contrat" : {"valide" : "no"}, "devis" : {"valide" : "no"}, "cahier_charges" : {"valide" : "no"}}
     user = mission.user
     client = mission.client
     returnedDic["nom_etude"] = name

@@ -18,7 +18,9 @@ def index(request):
 
 
 def info(request, name):
-    if(not checkToken(request)):
+    if("Token" not in request.POST):
+        return HttpResponse("not_connected", content_type="application/json")
+    if not Token.objects.filter(Token=request.POST["Token"]).exists():
         return HttpResponse("not_connected", content_type="application/json")
     us = getUser(request)
     if(not Mission.objects.filter(name=name)):

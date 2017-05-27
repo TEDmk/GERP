@@ -1,6 +1,7 @@
 ########### BASE IMPORT ################
 from django.conf import settings
 import os, sys
+import codecs
 from GERPAPI.log import *
 ########################################
 import shutil
@@ -47,7 +48,7 @@ class Doc:
         self.open()
 
     def open(self):
-        self.file = open(self.url + "/document.tex")
+        self.file = codecs.open(self.url + "/document.tex",'r',encoding='utf-8')
         self.text = self.file.read()
         self.file.close()
         tab = self.text.split("<%")

@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
+from Users.views import *
 urlpatterns = [
     url(r'^doc/', include('DocCreator.urls')),
     url(r'^users/', include('Users.urls')),
     url(r'^missions/', include('Missions.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'yearbook/user', getUser, name='yearbookuser'),
+    url(r'yearbook/client', getClient, name='yearbookclient'),
 ]

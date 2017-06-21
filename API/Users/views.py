@@ -24,6 +24,16 @@ def index(request):
     user["level"] = us.level
     return HttpResponse(json.dumps(user), content_type="application/json")
 
+def getUser(request):
+    return HttpResponse(json.dumps(list(User.objects.values('username', 'email', 'cellphone', 'level'))), content_type="application/json")
+
+def getClient(request):
+    data = list(Client.objects.values('firstname', 'surname', 'society', 'siret', 'cellphone', 'email', 'context', 'time'))
+    for x in data:
+        x["time"] = x["time"].strftime("%Y-%m-%d")
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
 def connection(request):
     print(request.POST)
     if(checkToken(request)):

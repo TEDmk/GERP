@@ -13,6 +13,7 @@ checkDocMigration(docDict)
 
 urlpatterns = [
     url(r'info/(?P<docName>\w+)', views.info, name="info"),
+    url(r'list', views.doclist, name="info"),
     url(r'add/(?P<docName>\w+)', views.add, name="add"),
     url(r'download/(?P<docDate>\w+)-(?P<docName>\w+)', views.download, name="download"),
     url(r'update/(?P<docDate>\w+)-(?P<docName>\w+)', views.update, name="update"),

@@ -22,14 +22,14 @@ def index(request):
     return HttpResponse("", content_type="application/json")
 
 def info(request, docName):
-    if(not checkToken(request)):
-        return HttpResponse("not_connected", content_type="application/json")
+    #if(not checkToken(request)):
+    #    return HttpResponse("not_connected", content_type="application/json")
     inf = info2txt(docName)
     return HttpResponse(inf, content_type="application/json")
 
 def add(request, docName):
-    if(not checkToken(request)):
-        return HttpResponse("not_connected", content_type="application/json")
+    #if(not checkToken(request)):
+    #    return HttpResponse("not_connected", content_type="application/json")
     us = getUser(request)
     if(Document.objects.filter(name=docName)):
         do = Document.objects.filter(name=docName).first()
@@ -60,8 +60,8 @@ def add(request, docName):
     return HttpResponse("error", content_type="application/json")
 
 def download(request, docDate, docName):
-    if(not checkToken(request)):
-        return HttpResponse("false", content_type="application/json")
+    #if(not checkToken(request)):
+    #    return HttpResponse("false", content_type="application/json")
     us = getUser(request)
     file_path = PATH_TO_DOCCREATOR + "/releases/" + docDate + "-" + docName + ".pdf"
     if os.path.exists(file_path):
@@ -72,11 +72,17 @@ def download(request, docDate, docName):
     return HttpResponse("not_found", content_type="application/json")
 
 def update(request, docDate, docName):
-    if(not checkToken(request)):
-        return HttpResponse("not_connected", content_type="application/json")
+    #if(not checkToken(request)):
+    #    return HttpResponse("not_connected", content_type="application/json")
     us = getUser(request)
     name = docDate + "-" + docName
     if(GeneratedDoc.objects.filter(name=name).exists()):
         pass
     else:
         return HttpResponse("not_found", content_type="application/json")
+
+def doclist(request):
+    data = list(GeneratedDoc.objects.values('name', 'time', 'user'))
+    for x in data:
+        x["time"] = x["time"].strftime("%Y-%m-%d")
+    return HttpResponse(json.dumps(data), content_type="application/json")

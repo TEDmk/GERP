@@ -8,7 +8,7 @@ def info2txt(docName):
         for k in GroupField.objects.filter(document=do):
             doc[k.name] = {}
             for l in Field.objects.filter(group=k):
-                doc[k.name][l.name] = {"type" : l.type, "choice" : l.choice}
+                doc[k.name][l.name] = {"type" : l.type, "choice" : eval(l.choice)}
         return json.dumps(doc)
     return "no"
 

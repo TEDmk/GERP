@@ -86,3 +86,7 @@ def doclist(request):
     for x in data:
         x["time"] = x["time"].strftime("%Y-%m-%d")
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+def templatelist(request):
+    data = list(Document.objects.values('name'))
+    return HttpResponse(json.dumps(data), content_type="application/json")

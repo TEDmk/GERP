@@ -12,10 +12,10 @@ def checkToken(request):
     return True
 
 def getUser(request):
-    if("connToken" in request.COOKIES):
-        if(Token.objects.filter(Token=request.COOKIES["connToken"]).exists()):
-            if(Token.objects.filter(Token=request.COOKIES["connToken"]).first().invalidationDate>datetime.datetime.now(pytz.utc)):
-                tok = Token.objects.get(Token=request.COOKIES["connToken"])
+    if("Token" in request.POST):
+        if(Token.objects.filter(Token=request.POST["Token"]).exists()):
+            if(Token.objects.filter(Token=request.POST["Token"]).first().invalidationDate>datetime.datetime.now(pytz.utc)):
+                tok = Token.objects.get(Token=request.POST["Token"])
                 tok.invalidationDate = datetime.datetime.now() + datetime.timedelta(hours=1)
                 tok.save()
                 return tok.user

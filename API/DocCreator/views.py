@@ -21,16 +21,34 @@ docDict = getDocDict()
 def index(request):
     return HttpResponse("", content_type="application/json")
 
-def info(request, docName):
+def infogener(request, docDate, docName):
     #if(not checkToken(request)):
     #    return HttpResponse("not_connected", content_type="application/json")
+    #us = getUser(request)
+    name = docDate + "-" + docName
+    if(GeneratedDoc.objects.filter(name=name).exists()):
+        gdo = GeneratedDoc.objects.get(name=name)
+        r = {}
+        r["template"] = gdo.document.name
+        r["field"] = {}
+        for k in GeneratedKey.objects.filter(generatedDoc=gdo):
+            r["field"][k.key] = k.value
+        print(r)
+        return HttpResponse(json.dumps(r), content_type="application/json")
+    else:
+        return HttpResponse("not_found", content_type="application/json")
+
+def info(request, docName):
+    if(not checkToken(request)):
+        return HttpResponse("not_connected", content_type="application/json")
     inf = info2txt(docName)
     return HttpResponse(inf, content_type="application/json")
 
 def add(request, docName):
-    #if(not checkToken(request)):
-    #    return HttpResponse("not_connected", content_type="application/json")
+    if(not checkToken(request)):
+        return HttpResponse("not_connected", content_type="application/json")
     us = getUser(request)
+    print(us.username)
     if(Document.objects.filter(name=docName)):
         do = Document.objects.filter(name=docName).first()
         ListOfItems = []
@@ -39,19 +57,19 @@ def add(request, docName):
                 ListOfItems.append(l.name)
         allfield = True
         for x in ListOfItems:
-            if x not in request.GET:
+            if x not in request.POST:
                 allfield = False
         if(allfield):
             nam = str(int(time.time()))+"-"+do.name
             Gdo = GeneratedDoc(document=do, name=nam,user=us)
             Gdo.save()
             for x in ListOfItems:
-                Gf = GeneratedKey(generatedDoc=Gdo,key=x,value=request.GET[x])
+                Gf = GeneratedKey(generatedDoc=Gdo,key=x,value=request.POST[x])
                 Gf.save()
             doc = docDict[do.name]
             doc.open()
             for x in ListOfItems:
-                doc.setVar(x,request.GET[x])
+                doc.setVar(x,request.POST[x])
             doc.applyVar(nam)
             log.add("DocCreator","Creating file : " + nam + ".pdf", us)
             return HttpResponse(nam, content_type="application/json")
@@ -72,8 +90,8 @@ def download(request, docDate, docName):
     return HttpResponse("not_found", content_type="application/json")
 
 def update(request, docDate, docName):
-    #if(not checkToken(request)):
-    #    return HttpResponse("not_connected", content_type="application/json")
+    if(not checkToken(request)):
+        return HttpResponse("not_connected", content_type="application/json")
     us = getUser(request)
     name = docDate + "-" + docName
     if(GeneratedDoc.objects.filter(name=name).exists()):

@@ -48,6 +48,7 @@ def add(request, docName):
     if(not checkToken(request)):
         return HttpResponse("not_connected", content_type="application/json")
     us = getUser(request)
+    print(docName)
     print(us.username)
     if(Document.objects.filter(name=docName)):
         do = Document.objects.filter(name=docName).first()
@@ -59,6 +60,9 @@ def add(request, docName):
         for x in ListOfItems:
             if x not in request.POST:
                 allfield = False
+            else:
+                if request.POST[x]=="":
+                    allfield = False
         if(allfield):
             nam = str(int(time.time()))+"-"+do.name
             Gdo = GeneratedDoc(document=do, name=nam,user=us)
@@ -88,16 +92,6 @@ def download(request, docDate, docName):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     return HttpResponse("not_found", content_type="application/json")
-
-def update(request, docDate, docName):
-    if(not checkToken(request)):
-        return HttpResponse("not_connected", content_type="application/json")
-    us = getUser(request)
-    name = docDate + "-" + docName
-    if(GeneratedDoc.objects.filter(name=name).exists()):
-        pass
-    else:
-        return HttpResponse("not_found", content_type="application/json")
 
 def doclist(request):
     data = list(GeneratedDoc.objects.values('name', 'time', 'user'))

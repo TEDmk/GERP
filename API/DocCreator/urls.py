@@ -10,6 +10,7 @@ from doc import *
 
 docDict = getDocDict()
 checkDocMigration(docDict)
+print("ok")
 
 urlpatterns = [
     url(r'info/(?P<docName>\w+)', views.info, name="info"),
@@ -17,7 +18,6 @@ urlpatterns = [
     url(r'templatelist', views.templatelist, name="info"),
     url(r'add/(?P<docName>\w+)', views.add, name="add"),
     url(r'generate/download/(?P<docDate>\w+)-(?P<docName>\w+)', views.download, name="download"),
-    url(r'generate/update/(?P<docDate>\w+)-(?P<docName>\w+)', views.update, name="update"),
     url(r'generate/infod/(?P<docDate>\w+)-(?P<docName>\w+)', views.infogener, name="infogener"),
     url(r'^$', views.index, name='index'),
 ]

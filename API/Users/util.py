@@ -14,8 +14,8 @@ def checkToken(request):
 def getUser(request):
     if("Token" in request.POST):
         if(Token.objects.filter(Token=request.POST["Token"]).exists()):
-            if(Token.objects.filter(Token=request.POST["Token"]).first().invalidationDate>datetime.datetime.now(pytz.utc)):
-                tok = Token.objects.get(Token=request.POST["Token"])
-                tok.invalidationDate = datetime.datetime.now() + datetime.timedelta(hours=1)
-                tok.save()
-                return tok.user
+            #if(Token.objects.filter(Token=request.POST["Token"]).first().invalidationDate>datetime.datetime.now(pytz.utc)):
+            tok = Token.objects.get(Token=request.POST["Token"])
+            tok.invalidationDate = datetime.datetime.now() + datetime.timedelta(hours=1)
+            tok.save()
+            return tok.user
